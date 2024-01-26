@@ -1,0 +1,59 @@
+Part 1
+$ SELECT stdFirstName, stdLastName, stdCity, stdGPA FROM student WHERE stdGPA>=(3.7);
++--------------+-------------+---------+--------+
+| stdFirstName | stdLastName | stdCity | stdGPA |
++--------------+-------------+---------+--------+
+| CRISTOPHER   | COLAN       | SEATTLE |   4.00 |
+| WILLIAM      | PILGRIM     | BOTHELL |   3.80 |
++--------------+-------------+---------+--------+
+
+Part 2
+$ SELECT FacFirstName, FacLastName, FacHireDate FROM faculty WHERE year(FacHireDate)=1999 OR year(FacHireDate)=2000;
++--------------+-------------+-------------+
+| FacFirstName | FacLastName | FacHireDate |
++--------------+-------------+-------------+
+| CRISTOPHER   | COLAN       | 1999-03-01  |
+| JULIA        | MILLS       | 2000-03-15  |
++--------------+-------------+-------------+
+
+Part 3
+$ SELECT OfferNo, CourseNo, FacSSN FROM offering WHERE (OffTerm='FALL' AND OffYear = 2005) OR (OffTerm='WINTER' AND OffYear=2006);
++---------+----------+-------------+
+| OfferNo | CourseNo | FacSSN      |
++---------+----------+-------------+
+|    1234 | IS320    | 098-76-5432 |
+|    4321 | IS320    | 098-76-5432 |
+|    4444 | IS320    | 543-21-0987 |
+|    5555 | FIN300   | 765-43-2109 |
+|    5678 | IS480    | 987-65-4321 |
+|    6666 | FIN450   | 987-65-4321 |
++---------+----------+-------------+
+
+Part 4
+$ SELECT crsDesc, OfferNo, offering.CourseNo, OffTime, OffDays FROM course JOIN offering ON offering.CourseNo = course.CourseNo WHERE (OffTerm='SPRING' AND OffYear=2006;
++--------------------------------------+---------+----------+----------+---------+
+| crsDesc                              | OfferNo | CourseNo | OffTime  | OffDays |
++--------------------------------------+---------+----------+----------+---------+
+| FUNDAMENTALS OF BUSINESS PROGRAMMING |    3333 | IS320    | 08:30:00 | MW      |
+| FUNDAMENTALS OF DATABASE MANAGEMENT  |    5678 | IS480    | 10:30:00 | MW      |
+| FUNDAMENTALS OF DATABASE MANAGEMENT  |    5679 | IS480    | 15:30:00 | TTH     |
++--------------------------------------+---------+----------+----------+---------+
+
+Part 5
+$ SELECT OfferNo, CourseNo, FacFirstName, FacLastName, Offterm, OffYear, FacRank FROM offering JOIN faculty ON faculty.FacSSN = offering.FacSSN WHERE (OffTerm='FALL' AND OffYear=2005);
++---------+----------+--------------+-------------+---------+---------+---------+
+| OfferNo | CourseNo | FacFirstName | FacLastName | Offterm | OffYear | FacRank |
++---------+----------+--------------+-------------+---------+---------+---------+
+|    1234 | IS320    | LEONARD      | VINCE       | FALL    |    2005 | ASST    |
+|    4321 | IS320    | LEONARD      | VINCE       | FALL    |    2005 | ASST    |
++---------+----------+--------------+-------------+---------+---------+---------+
+
+Part 6
+$ SELECT AVG(stdGPA), stdMajor FROM student GROUP BY stdMajor;
++-------------+----------+
+| AVG(stdGPA) | stdMajor |
++-------------+----------+
+|    3.400000 | ACCT     |
+|    2.800000 | FIN      |
+|    3.233333 | IS       |
++-------------+----------+
