@@ -1,1 +1,160 @@
-bla bla
+Exercise 5
+
+Part 1
+$ SELECT guestname, guestaddress FROM guest WHERE guestaddress LIKE ‘%London' ORDER BY guestname
++--------------+--------------------+
+| guestname    | guestaddress       |
++--------------+--------------------+
+| John Kay     | 56 High St, London |
+| Mike Ritchie | 18 Tain St, London |
++--------------+--------------------+
+
+Part 2
+$ SELECT * FROM room WHERE (type='double' OR type='family') AND price<40 ORDER BY price;
++--------+---------+--------+-------+
+| roomno | hotelno | type   | price |
++--------+---------+--------+-------+
+|    801 | ch02    | double | 15.00 |
+|    601 | fb01    | double | 29.00 |
+|   1001 | dc01    | double | 30.00 |
+|   1101 | dc01    | family | 35.00 |
+|    701 | fb01    | family | 39.00 |
++--------+---------+--------+-------+
+
+Part 3
+$ SELECT * FROM booking WHERE dateto IS NULL;
++---------+---------+------------+--------+--------+
+| hotelno | guestno | datefrom   | dateto | roomno |
++---------+---------+------------+--------+--------+
+| ch01    |   10006 | 2023-04-21 | NULL   |   1101 |
+| dc01    |   10003 | 2023-05-20 | NULL   |   1001 |
+| fb01    |   10001 | 2023-05-01 | NULL   |    701 |
++---------+---------+------------+--------+--------+
+
+Part 4
+$ SELECT avg(price) FROM room;
++------------+
+| avg(price) |
++------------+
+|  35.748333 |
++------------+
+
+Part 5
+$ SELECT sum(price) FROM room WHERE type='double';
++------------+
+| sum(price) |
++------------+
+|     160.00 |
++------------+
+
+Part 6
+SELECT count(*) as guestNumber FROM booking WHERE MONTH(DATEFROM) = 08 OR MONTH(DATETO) = 08;
++-------------+
+| guestNumber |
++-------------+
+|           0 |
++-------------+
+
+Part 7
+$ SELECT type, price FROM room JOIN hotel  on room.hotelno = hotel.hotelno;
++--------+-------+
+| type   | price |
++--------+-------+
+| single | 29.99 |
+| family | 59.99 |
+| single | 10.00 |
+| double | 15.00 |
+| single | 18.00 |
+| double | 30.00 |
+| family | 35.00 |
+| single | 19.00 |
+| double | 29.00 |
+| family | 39.00 |
+| single | 58.00 |
+| double | 86.00 |
++--------+-------+
+
+Part 8
+$ SELECT * FROM guest JOIN booking ON guest.guestno = booking.guestno JOIN hotel ON booking.hotelno = hotel.hotelno WHERE hotelname='The Tower Hotel' AND curdate()>datefrom AND curdate()<dateto;
+Empty set (0.000 sec)
+
+Part 9
+$ SELECT DISTINCT room.*, guest.guestname FROM hotel JOIN room ON room.hotelno = hotel.hotelno JOIN booking ON booking.hotelno = room.hotelno JOIN guest ON guest.guestno = booking.guest
+no WHERE hotelname='The Tower Hotel';
++--------+---------+--------+-------+--------------+
+| roomno | hotelno | type   | price | guestname    |
++--------+---------+--------+-------+--------------+
+|    501 | fb01    | single | 19.00 | John Kay     |
+|    601 | fb01    | double | 29.00 | John Kay     |
+|    701 | fb01    | family | 39.00 | John Kay     |
+|    501 | fb01    | single | 19.00 | Mike Ritchie |
+|    601 | fb01    | double | 29.00 | Mike Ritchie |
+|    701 | fb01    | family | 39.00 | Mike Ritchie |
+|    501 | fb01    | single | 19.00 | Joe Keogh    |
+|    601 | fb01    | double | 29.00 | Joe Keogh    |
+|    701 | fb01    | family | 39.00 | Joe Keogh    |
+|    501 | fb01    | single | 19.00 | Carol Farrel |
+|    601 | fb01    | double | 29.00 | Carol Farrel |
+|    701 | fb01    | family | 39.00 | Carol Farrel |
++--------+---------+--------+-------+--------------+
+
+Part 10
+$ SELECT sum(price) FROM hotel JOIN booking ON booking.hotelno = hotel.hotelno JOIN room ON hotel.hotelno = room.hotelno WHERE hotelname='The Tower Hotel' AND (curdate() BETWEEN datefrom AND dateto);
++------------+
+| sum(price) |
++------------+
+|       NULL |
++------------+
+
+Part 11
+$ SELECT DISTINCT room.* FROM room JOIN hotel ON hotel.hotelno = room.hotelno JOIN booking ON booking.hotelno = hotel.hotelno WHERE hotelname='The Tower Hotel'
+AND (curdate()>dateto OR dateto IS NOT  NULL);
++--------+---------+--------+-------+
+| roomno | hotelno | type   | price |
++--------+---------+--------+-------+
+|    501 | fb01    | single | 19.00 |
+|    601 | fb01    | double | 29.00 |
+|    701 | fb01    | family | 39.00 |
++--------+---------+--------+-------+
+
+Part 12
+$ SELECT sum(price) FROM room where roomno IN (SELECT room.roomno FROM room JOIN hotel ON hotel.hotelno = room.hotelno JOIN booking ON booking.hotelno = hotel.hotelno WHERE hotelname='The Tower Hotel' AND (curdate()>dateto OR dateto IS NOT NULL));
++------------+
+| sum(price) |
++------------+
+|      97.00 |
++------------+
+
+Part 13
+$ SELECT hotelname, count(*) as NumberOfRooms FROM room JOIN hotel ON hotel.hotelno = room.hotelno WHERE city='London' GROUP BY hotelname;
++-----------------+---------------+
+| hotelname       | NumberOfRooms |
++-----------------+---------------+
+| Omni Shoreham   |             2 |
+| Phoenix Park    |             2 |
+| The Tower Hotel |             3 |
++-----------------+---------------+
+
+Part 14
+
+Part 15
+$ UPDATE room SET price = price*1.05;
+Query OK, 12 rows affected, 2 warnings (0.005 sec)
+Rows matched: 12  Changed: 12  Warnings: 2
++--------+---------+--------+-------+
+| roomno | hotelno | type   | price |
++--------+---------+--------+-------+
+|    501 | fb01    | single | 19.95 |
+|    601 | fb01    | double | 30.45 |
+|    701 | ch02    | single | 10.50 |
+|    701 | fb01    | family | 40.95 |
+|    801 | ch02    | double | 15.75 |
+|    901 | dc01    | single | 18.90 |
+|   1001 | ch01    | single | 31.49 |
+|   1001 | dc01    | double | 31.50 |
+|   1001 | fb02    | single | 60.90 |
+|   1101 | ch01    | family | 62.99 |
+|   1101 | dc01    | family | 36.75 |
+|   1101 | fb02    | double | 90.30 |
++--------+---------+--------+-------+
+
